@@ -53,7 +53,7 @@ public class Calculadora extends JFrame {
 	 */
 	public Calculadora() {
 		super();
-		setSize(250, 300);
+		setSize(300, 300);
 		setTitle("Calculadora Simple");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -90,8 +90,14 @@ public class Calculadora extends JFrame {
 		nuevoBotonOperacion("-");
 		nuevoBotonOperacion("*");
 		nuevoBotonOperacion("/");
-		nuevoBotonOperacion("=");
-		nuevoBotonOperacion("CE");
+		nuevoBotonOperacion("Sen");
+		nuevoBotonOperacion("Cos");
+                //Se agregan los botones 
+                nuevoBotonOperacion("^");
+                nuevoBotonOperacion("%");
+                nuevoBotonOperacion("!");
+                nuevoBotonOperacion("=");
+                nuevoBotonOperacion("CE");
 
 		panel.add("East", panelOperaciones);
 
@@ -162,7 +168,20 @@ public class Calculadora extends JFrame {
 	 * @param tecla
 	 */
 	private void operacionPulsado(String tecla) {
-		if (tecla.equals("=")) {
+            //Valida operaciones que solo necesitan un número
+		if (tecla.equals("=") || tecla.equals("Sen") || tecla.equals("Cos") || tecla.equals("!")) {
+                    switch(tecla)
+                    {
+                        case "Sen":
+                            operacion = "Sen";
+                            break;
+                        case "Cos":
+                            operacion = "Cos";
+                            break;
+                        case "!":
+                            operacion = "!";
+                            break;
+                    }
 			calcularResultado();
 		} else if (tecla.equals("CE")) {
 			resultado = 0;
@@ -184,17 +203,77 @@ public class Calculadora extends JFrame {
 	 * Calcula el resultado y lo muestra por pantalla
 	 */
 	private void calcularResultado() {
-		if (operacion.equals("+")) {
-			resultado += new Double(pantalla.getText());
-		} else if (operacion.equals("-")) {
-			resultado -= new Double(pantalla.getText());
-		} else if (operacion.equals("/")) {
-			resultado /= new Double(pantalla.getText());
-		} else if (operacion.equals("*")) {
-			resultado *= new Double(pantalla.getText());
-		}
+            switch (operacion) {
+                case "+":
+                    resultado += new Double(pantalla.getText());
+                    break;
+                case "-":
+                    resultado -= new Double(pantalla.getText());
+                    break;
+                case "/":
+                    resultado /= new Double(pantalla.getText());
+                    break;
+                case "*":
+                    resultado *= new Double(pantalla.getText());
+                    break;
+                //Agregamos 5 operaciones más.
+                case "%":
+                    resultado = mod(resultado, new Double(pantalla.getText()));
+                    break;
+                case "Sen":
+                    resultado = seno(new Double(pantalla.getText()));
+                    break;
+                case "Cos":
+                    resultado = coseno(new Double(pantalla.getText()));
+                    break;
+                case "^":
+                    resultado = potencia(resultado, new Double(pantalla.getText()));
+                    break;
+                case "!":
+                    resultado = factorial(new Double(pantalla.getText()));
+                    break;
+            }
 
 		pantalla.setText("" + resultado);
 		operacion = "";
+	}
+        //Agregamos los métodos para realizar las 5 operarciones agregadas.
+        public double mod(double num, double num2)
+	{
+		double res;
+		res = num % num2;
+		return res;
+	}
+
+	public double seno(double num)
+	{
+		double res = Math.sin(Math.toRadians(num));
+		return res;
+	}
+
+	public double coseno(double num)
+	{
+		double res = Math.cos(Math.toRadians(num));
+		return res;
+	}
+
+	public double potencia(double num, double num2)
+	{
+		double res = num;
+		for(int i = 1; i<num2;i++)
+		{
+			res = res*num;
+		}
+		return res;
+	}
+
+	public double factorial(double num)
+	{
+		double res = 1;
+		for(int i = 1; i<=num; i++)
+		{
+			res = res*i;
+		}
+		return res;
 	}
 }
